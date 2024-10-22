@@ -1,7 +1,7 @@
 import csv
 from os import device_encoding
 
-
+def
 hw_dict = {}
 # загрузка CSV файла
 with open('ZAMFIN.csv', 'r', newline='', encoding='utf-8') as csv_file:
