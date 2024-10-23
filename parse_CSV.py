@@ -4,6 +4,7 @@ from os import listdir
 
 
 def get_data_from_file(f_name: str) -> dict:
+    os.chdir('./pc_dir')
     hw_dict = {}
     # загрузка CSV файла
     with open(f_name, 'r', newline='', encoding='utf-8') as csv_file:
@@ -55,29 +56,31 @@ def get_data_from_file(f_name: str) -> dict:
 #Запись в файл csv
 def write_data_to_file(comp_name: str, data: dict):
     os.chdir('..')
-    with open('comp_data.csv', 'w', newline='', encoding='utf-8') as csv_file:
+    with open('comp_data.csv', 'a', newline='', encoding='utf-8') as csv_file:
+        csv_file.write('\n')
         csv_file.write(comp_name[:-4] + '\n')
 
         # Записываем данные построчно
         for key, values in data.items():
-            if isinstance(values[0], list):
-                for v in values:
-                    csv_file.write(f"{key},{', '.join(v)}\n")
-            else:
-                csv_file.write(f"{key},{', '.join(values)}\n")
+            if len(values) > 0:
+                if isinstance(values[0], list):
+                    for v in values:
+                        csv_file.write(f"{key},{', '.join(v)}\n")
+                else:
+                    csv_file.write(f"{key},{', '.join(values)}\n")
 
 
 
-os.chdir('./pc_dir')
-comp_name = 'ZAMFIN.csv'
-comp_data = get_data_from_file(comp_name)
-write_data_to_file(comp_name, comp_data,)
-for device, options in comp_data.items():
-    print(f'{device}: {options}')
-# for comp in listdir():
-#     print(comp[:-4])
-#     comp_data = get_data_from_file(comp)
-#     for device, options in comp_data.items():
-#         print(f'{device}: {options}')
-
+# os.chdir('./pc_dir')
+# comp_name = 'ZAMFIN.csv'
+# comp_data = get_data_from_file(comp_name)
+# write_data_to_file(comp_name, comp_data,)
+# for device, options in comp_data.items():
+#     print(f'{device}: {options}')
+for comp in listdir('./pc_dir'):
+    print(comp)
+    comp_data = get_data_from_file(comp)
+    # for device, options in comp_data.items():
+    #     print(f'{device}: {options}')
+    write_data_to_file(comp, comp_data)
 
