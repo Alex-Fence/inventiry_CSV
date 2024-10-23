@@ -35,10 +35,10 @@ def get_data_from_file(f_name: str) -> dict:
             case 'Оперативная память':
                 dev_dict_cut[device] = [i for i in options if 'Объем' in i or 'Частота' in i]
             case 'Запоминающие устройства':
-                dev_dict_cut[device] = [i for i in options if not ('Описание' in i or 'Поставщик' in i)]
-                # dev_dict_cut[device] = []
-                # for d in range(0, len(options), 6):
-                #     dev_dict_cut[device].append([i for i in options[d:d + 6] if not ('Описание' in i or 'Поставщик' in i)])
+                #dev_dict_cut[device] = [i for i in options if not ('Описание' in i or 'Поставщик' in i)]
+                dev_dict_cut[device] = []
+                for d in range(0, len(options), 6):
+                    dev_dict_cut[device].append([i for i in options[d:d + 6] if not ('Описание' in i or 'Поставщик' in i)])
             case 'Видеоадаптеры':
                 if len(options) > 5:
                     dev_dict_cut[device] = [options[0], options[5]]
@@ -53,23 +53,25 @@ def get_data_from_file(f_name: str) -> dict:
     return dev_dict_cut
 
 #Запись в файл csv
-def write_data_to_file(data: dict, f_name: str):
+def write_data_to_file(comp_name: str, data: dict):
     os.chdir('..')
-    with open(f_name, 'a', newline='', encoding='utf-8') as csv_file:
-        csv_w = csv.writer(csv_file)
+    with open('comp_data.csv', 'w', newline='', encoding='utf-8') as csv_file:
+        csv_file.write(comp_name[:-4] + '\n')
 
         # Записываем данные построчно
         for key, values in data.items():
-            if isinstance(values[0], list):  # Если значения - это списки
-                for item in values:
-                    csv_file.write(f'{key},"{", ".join(item)}"\n')
+            if isinstance(values[0], list):
+                for v in values:
+                    csv_file.write(f"{key},{', '.join(v)}\n")
             else:
-                csv_file.write(f'{key},"{values[0]}"\n')
+                csv_file.write(f"{key},{', '.join(values)}\n")
+
 
 
 os.chdir('./pc_dir')
-comp_data = get_data_from_file('ZAMFIN.csv')
-write_data_to_file(comp_data, 'comp_data.csv')
+comp_name = 'ZAMFIN.csv'
+comp_data = get_data_from_file(comp_name)
+write_data_to_file(comp_name, comp_data,)
 for device, options in comp_data.items():
     print(f'{device}: {options}')
 # for comp in listdir():
