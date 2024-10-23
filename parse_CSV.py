@@ -1,4 +1,5 @@
 import csv
+import os
 from os import listdir
 
 def get_data_from_file(f_name: str)->dict:
@@ -47,6 +48,9 @@ def get_data_from_file(f_name: str)->dict:
                 dev_dict_cut[device] = [options[1]]
     return dev_dict_cut
 
-for device, options in get_data_from_file('ZAMFIN.csv').items():
-    print(f'{device}: {options}')
-print(listdir())
+os.chdir('./pc_dir')
+for comp in listdir():
+    print(comp)
+    comp_data = get_data_from_file(comp)
+    for device, options in comp_data.items():
+        print(f'{device}: {options}')
