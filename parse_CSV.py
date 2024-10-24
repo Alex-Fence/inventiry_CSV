@@ -22,8 +22,8 @@ def get_data_from_file(f_name: str) -> dict:
     # переделка ключа Материнская плата из-за его искажения при загрузки
     hw_dict['Материнская плата'] = hw_dict.pop('\ufeffМатеринская плата')
     # печать полученного словаря
-    # for k, v in hw_dict.items():
-    #     print(f'{k}: {len(v)}')
+    for k, v in hw_dict.items():
+        print(f'{k}: {len(v)}')
 
     dev_dict_cut = {}
     # очистка словаря от лишних значений
@@ -34,7 +34,10 @@ def get_data_from_file(f_name: str) -> dict:
             case 'Процессоры':
                 dev_dict_cut[device] = [options[0]]
             case 'Оперативная память':
-                dev_dict_cut[device] = [i for i in options if 'Объем' in i or 'Частота' in i]
+                dev_dict_cut[device] = []
+                for d in range(0, len(options), 3):
+                    dev_dict_cut[device].append([i for i in options[d:d + 3] if 'Объем' in i or 'Частота' in i])
+
             case 'Запоминающие устройства':
                 #dev_dict_cut[device] = [i for i in options if not ('Описание' in i or 'Поставщик' in i)]
                 dev_dict_cut[device] = []
