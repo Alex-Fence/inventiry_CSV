@@ -3,6 +3,7 @@ import os
 from os import listdir
 
 
+# функция получения данных из файла
 def get_data_from_file(f_name: str) -> dict:
     os.chdir('./pc_dir')
     hw_dict = {}
@@ -21,11 +22,8 @@ def get_data_from_file(f_name: str) -> dict:
                         hw_dict[name_s].append(i)
     # переделка ключа Материнская плата из-за его искажения при загрузки
     hw_dict['Материнская плата'] = hw_dict.pop('\ufeffМатеринская плата')
-    # печать полученного словаря
-    for k, v in hw_dict.items():
-        print(f'{k}: {len(v)}')
 
-    dev_dict_cut = {}
+    dev_dict_cut = {}  # словарь для сохранения отфильтрованных данных
     # очистка словаря от лишних значений
     for device, options in hw_dict.items():
         match device:
@@ -37,12 +35,11 @@ def get_data_from_file(f_name: str) -> dict:
                 dev_dict_cut[device] = []
                 for d in range(0, len(options), 3):
                     dev_dict_cut[device].append([i for i in options[d:d + 3] if 'Объем' in i or 'Частота' in i])
-
             case 'Запоминающие устройства':
-                #dev_dict_cut[device] = [i for i in options if not ('Описание' in i or 'Поставщик' in i)]
                 dev_dict_cut[device] = []
                 for d in range(0, len(options), 6):
-                    dev_dict_cut[device].append([i for i in options[d:d + 6] if not ('Описание' in i or 'Поставщик' in i)])
+                    dev_dict_cut[device].append(
+                        [i for i in options[d:d + 6] if not ('Описание' in i or 'Поставщик' in i)])
             case 'Видеоадаптеры':
                 if len(options) > 5:
                     dev_dict_cut[device] = [options[0], options[5]]
@@ -56,13 +53,13 @@ def get_data_from_file(f_name: str) -> dict:
                 dev_dict_cut[device] = [options[1]]
     return dev_dict_cut
 
-#Запись в файл csv
+
+# Запись в файл csv
 def write_data_to_file(comp_name: str, data: dict):
     os.chdir('..')
     with open('comp_data.csv', 'a', newline='', encoding='utf-8') as csv_file:
         csv_file.write('\n')
         csv_file.write(comp_name[:-4] + '\n')
-
         # Записываем данные построчно
         for key, values in data.items():
             if len(values) > 0:
@@ -71,19 +68,11 @@ def write_data_to_file(comp_name: str, data: dict):
                         csv_file.write(f"{key},{', '.join(v)}\n")
                 else:
                     csv_file.write(f"{key},{', '.join(values)}\n")
+            else:
+                csv_file.write(f"{key}, НЕТ ДАННЫХ\n")
 
 
-
-# os.chdir('./pc_dir')
-# comp_name = 'ZAMFIN.csv'
-# comp_data = get_data_from_file(comp_name)
-# write_data_to_file(comp_name, comp_data,)
-# for device, options in comp_data.items():
-#     print(f'{device}: {options}')
 for comp in listdir('./pc_dir'):
     print(comp)
     comp_data = get_data_from_file(comp)
-    # for device, options in comp_data.items():
-    #     print(f'{device}: {options}')
     write_data_to_file(comp, comp_data)
-
