@@ -50,7 +50,7 @@ def get_data_from_file(f_name: str) -> dict:
             case 'Адаптеры сетевого интерфейса':
                 dev_dict_cut[device] = [options[0]]
             case 'Мониторы':
-                dev_dict_cut[device] = [options[1]]
+                dev_dict_cut[device] = [options[i] for i in range(0, len(options), 5)]
     return dev_dict_cut
 
 
