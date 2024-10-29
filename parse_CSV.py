@@ -3,6 +3,7 @@ import os
 from os import listdir
 import socket
 
+
 # функция получения данных из файла
 def get_data_from_file(f_name: str) -> dict:
     os.chdir('./pc_dir')
